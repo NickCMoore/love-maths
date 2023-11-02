@@ -2,7 +2,7 @@
 // Get the button elements and add event listeners to them
 
 document.addEventListener("DOMContentLoaded", function () {
-    let buttons = document.getElementsByTagName("button")
+    let buttons = document.getElementsByTagName("button");
 
     for (let button of buttons) {
         button.addEventListener("click", function () {
@@ -12,12 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
             }
-        })
+        });
     }
 
     runGame("addition");
 
-})
+});
 
 /**
  * The main game "loop", called when the script is first loaded
@@ -34,6 +34,8 @@ function runGame(gameType) {
         displayAdditionQuestion(num1, num2);
     } else if (gameType === "multiply") {
         displayMultiplyQuestion(num1, num2);
+    } else if (gameType === "subtract") {
+        displaySubtractQuestion(num1, num2);
     } else {
         alert(`Unknown game type: ${gameType}`);
         throw `Unknown game type: ${gameType}. Aborting!`;
@@ -55,14 +57,16 @@ function checkAnswer() {
         alert("Hey! You got it right! :D");
         incrementScore();
     } else {
-        alert(`Awwww.... you answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}`);
+        alert(`Awwww.... you answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}!`);
         incrementWrongAnswer();
     }
+
+    runGame(calculatedAnswer[1]);
 
 }
 
 /**
- *  Gets the operands (the numbers) and the operator (plus, minus etc)
+ * Gets the operands (the numbers) and the operator (plus, minus etc)
  * directly from the DOM and returns the correct answer.
  */
 
@@ -73,9 +77,11 @@ function calculateCorrectAnswer() {
     let operator = document.getElementById('operator').innerText;
 
     if (operator === "+") {
-        return [operand1 + operand2, "addition"]
+        return [operand1 + operand2, "addition"];
     } else if (operator === "x") {
-        return [operand1 * operand2, "multiply"]
+        return [operand1 * operand2, "multiply"];
+    } else if (operator === "-") {
+        return [operand1 - operand2, "subtract"];
     } else {
         alert(`Unimplemented operator ${operator}`);
         throw `Unimplemented operator ${operator}. Aborting!`;
@@ -84,7 +90,7 @@ function calculateCorrectAnswer() {
 }
 
 /**
- *  Gets the current score from the DOM and increments it by 1
+ * Gets the current score from the DOM and increments it by 1
  */
 
 function incrementScore() {
@@ -103,7 +109,6 @@ function incrementWrongAnswer() {
     let oldScore = parseInt(document.getElementById("incorrect").innerText);
     document.getElementById("incorrect").innerText = ++oldScore;
 
-
 }
 
 function displayAdditionQuestion(operand1, operand2) {
@@ -114,7 +119,11 @@ function displayAdditionQuestion(operand1, operand2) {
 
 }
 
-function displaySubtractQuestion() {
+function displaySubtractQuestion(operand1, operand2) {
+
+    document.getElementById('operand1').textContent = operand1 > operand2 ? operand1 : operand2;
+    document.getElementById('operand2').textContent = operand1 > operand2 ? operand2 : operand1;
+    document.getElementById('operator').textContent = "-";
 
 }
 
